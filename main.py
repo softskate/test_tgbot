@@ -7,10 +7,12 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from models import *
+from utils import SheetsAPI
 from config import *
 
 
 dp = Dispatcher()
+sheets = SheetsAPI(CRED)
 
 open('logging.log', 'wb')
 def log(*args):
@@ -76,6 +78,7 @@ async def message_handler(message: Message):
         await bot.send_message(chat_id, 'Пример работы добавлен')
     
     elif len(message.text) > 10:
+        sheets.update_data(chat_id, message.text)
         await bot.send_message(chat_id, 'Ваша заявка принята. Мы с вами скоро свяжемся.')
         for admin in ADMIN_IDS:
             await bot.send_message(admin, (
